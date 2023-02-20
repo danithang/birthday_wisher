@@ -2,7 +2,8 @@ import pandas
 import smtplib
 from datetime import datetime
 import random
-
+from dotenv import load_dotenv
+import os
 
 # Check if today matches a birthday in the birthdays.csv
 # Create a tuple from today's month and day using datetime
@@ -12,10 +13,13 @@ today = (datetime.now().month, datetime.now().day)
 data = pandas.read_csv("birthdays.csv")
 
 my_email = "pythontestberry@gmail.com"
+# making sure the .env file won't be pushed to gitHub
+load_dotenv()
 # password from app generator on gmail
-password = "dluhzayjhamxzxbj"
+password = os.getenv("PASSWORD")
 
-# Use dictionary comprehension to create a dictionary from birthday.csv that is formated like this:
+
+# Use dictionary comprehension to create a dictionary from birthday.csv that is formatted like this:
 # Dictionary comprehension template for pandas DataFrame looks like this:
 # new_dict = {new_key: new_value for (index, data_row) in data.iterrows()}
 # e.g. if the birthdays.csv looked like this:
@@ -25,7 +29,7 @@ password = "dluhzayjhamxzxbj"
 # birthdays_dict = {
 #     (12, 24): Angela,angela@email.com,1995,12,24
 # }
-# data_row is the name of the whole row of data...e.g. Daddy,macb12@msn.com,1958,1,7...the first part was breaking
+# data_row is the name of the whole row of data...e.g. Sassy,sassypants@msn.com,1958,1,7...the first part was breaking
 # down by only month and day and calling iterrows to iterate over each row
 birthdays_dict = {(data_row.month, data_row.day): data_row for (index, data_row) in data.iterrows()}
 
@@ -54,9 +58,3 @@ if today in birthdays_dict:
         # person's birthday
         connection.sendmail(from_addr=my_email, to_addrs=birthday_person["email"],
                             msg=f"Subject:Happy Birthday!\n\n{contents}")
-
-
-
-
-
-
